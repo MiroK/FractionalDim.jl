@@ -4,7 +4,7 @@ using StaticArrays
 import Base: in, split, start, next, done
 
 export Point, Segment, Triangle, Box
-export bbox_collides, collides
+export bbox_collides, collides, surface
 export BoxCounter
 
 # The precision for making comparisons
@@ -51,7 +51,9 @@ end
 
 Segment(X::Point{2}, Y::Point{2}) = Segment{2}(X, Y)
 Segment(X::Point{3}, Y::Point{3}) = Segment{3}(X, Y)
-(line::Segment)(s::Number) = line.O + s*line.t
+
+# Eval the curve using (0, 1) parametrization
+(line::Segment)(s::Number) = line.O + s*line.length*line.t
 
 struct Triangle{D}
     O::Point{D}     # O + s1*t1 + s2*t2 is the triangle; 0 <= s1 + s2 <= 1

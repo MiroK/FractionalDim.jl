@@ -13,7 +13,10 @@ function start{D}(counter::BoxCounter{D})::BoxCounterState{D}
     
     Y = Point((maximum(line.box.Y[i] for line in counter.fractal)
                for i in 1:D)...)
-
+    # Padding
+    X -= 0.1*(Y-X)
+    Y += 0.1*(Y-X)
+    
     dims = Y - X
     size = reduce(*, dims)^(1./length(dims))
     # The state is current box size, Number of hit boxes, boxes for next round
@@ -33,9 +36,7 @@ function next{D}(counter::BoxCounter{D}, state::BoxCounterState{D})::BoxCounterS
             if collides(line, box)
                 count += 1
                 # Childen will be visitid in the next round
-                for child in split(box)
-                    push!(new_boxes, child)
-                end
+                append!(new_boxes, split(box))
                 break
             end
         end
