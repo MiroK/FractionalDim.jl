@@ -2,21 +2,22 @@
 function split(box::Box{2})
     X, Y = box.X, box.Y
     M = 0.5(X + Y)
-    (Box(Point(X[1], X[2]), Point(M[1], M[2])),
+    [Box(Point(X[1], X[2]), Point(M[1], M[2])),
      Box(Point(X[1], M[2]), Point(M[1], Y[2])),
      Box(Point(M[1], X[2]), Point(Y[1], M[2])),
-     Box(Point(M[1], M[2]), Point(Y[1], Y[2])))
+     Box(Point(M[1], M[2]), Point(Y[1], Y[2]))]
 end
 
 """Four segments that are the boundary"""
 function surface(box::Box{2})
     X, Y = box.X, box.Y
-    (Segment(Point(X[1], X[2]), Point(X[1], Y[2])),
+    [Segment(Point(X[1], X[2]), Point(X[1], Y[2])),
      Segment(Point(X[1], Y[2]), Point(Y[1], Y[2])),
      Segment(Point(Y[1], Y[2]), Point(Y[1], X[2])),
-     Segment(Point(Y[1], X[2]), Point(X[1], X[2])))
+     Segment(Point(Y[1], X[2]), Point(X[1], X[2]))]
 end
 
+"""Do the 2 segments collide?"""
 function collides(s1::Segment{2}, s2::Segment{2})
     # Discard
     !(bbox_collides(s1.box, s2.box)) && return false

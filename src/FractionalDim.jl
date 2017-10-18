@@ -1,6 +1,8 @@
 module FractionalDim
 
 using StaticArrays
+using DataStructures
+
 import Base: in, split, start, next, done
 
 export Point, Segment, Triangle, Box
