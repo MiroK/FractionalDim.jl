@@ -3,7 +3,7 @@ module FractionalDim
 using StaticArrays
 using DataStructures
 
-import Base: in, split, start, next, done
+import Base: in, split, start, next, done, show
 
 export Point, Segment, Triangle, Box
 export bbox_collides, collides, surface
@@ -29,6 +29,7 @@ end
 Box(X::Point{2}, Y::Point{2}) = Box{2}(X, Y)
 Box(X::Point{3}, Y::Point{3}) = Box{3}(X, Y)
 
+show{D}(io::IO, b::Box{D}) = print(io, "$(b.X)-$(b.Y)")
 
 struct Segment{D}
     O::Point{D}   # O + s * t is the segment; 0 <= s <= 1
@@ -53,6 +54,8 @@ end
 
 Segment(X::Point{2}, Y::Point{2}) = Segment{2}(X, Y)
 Segment(X::Point{3}, Y::Point{3}) = Segment{3}(X, Y)
+
+show{D}(io::IO, b::Segment{D}) = print(io, "$(b.O)-$(b.B)")
 
 # Eval the curve using (0, 1) parametrization
 (line::Segment)(s::Number) = line.O + s*line.length*line.t
