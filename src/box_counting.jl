@@ -5,6 +5,13 @@ function Box{D}(fractal::Fractal{D})
     X = Point((minimum(line.box.X[i] for line in fractal) for i in 1:D)...)
     Y = Point((maximum(line.box.Y[i] for line in fractal) for i in 1:D)...)
     dX = Y - X
+
+    shift_size = 0.05*minimum(dX)
+    shift = Point(tuple(shift_size*ones(D)...))
+    # Shift both a bit not to have corner collisions
+    X -= shift
+    Y += shift
+    dX = Y - X
     # Pick largest 
     dx = maximum(dX)
     # Smallest cuboid that contains it

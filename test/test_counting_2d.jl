@@ -76,7 +76,7 @@ end
 
 # Koch
 @test begin
-    c = koch_flake(8)
+    c = koch_flake(9)
 
     counter = BoxCounter(c)
     sizes, counts, rates = [], [], []
@@ -94,8 +94,10 @@ end
             rate = -log(counts[end]/counts[end-1])/log(sizes[end]/sizes[end-1])
             push!(rates, rate)
         end
-        println((size, count, rate))       
+        # println((size, count, rate))       
     end
-    println(mean(rates[end-5:end]))
-    abs(mean(rates[end-5:end])-log(4)/log(3)) < 1E-2
+    approx = mean(rates[end-5:end])
+    exact = log(4)/log(3)
+    @show (approx, exact)
+    abs(approx - exact) < 1E-2
 end
