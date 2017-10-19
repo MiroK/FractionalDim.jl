@@ -42,7 +42,7 @@ function BoxCounter{D}(fractal::Fractal{D})
 end
 
 # One box intersected. That box is bounding box
-start{D}(c::BoxCounter{D}, nlevels::Int) = (nlevels, (c.size, 1))
+start{D}(c::BoxCounter{D}, nlevels::Int) = (nlevels, (2*c.size, 1))
 
 """
 The iterator state is the (level of refinment,
