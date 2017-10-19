@@ -1,11 +1,31 @@
 const Fractal{D} = Vector{Segment{D}}
 
+"""Bounding CUBEoid of the fractal"""
+function Box{D}(fractal::Fractal{D})
+    X = Point((minimum(line.box.X[i] for line in fractal) for i in 1:D)...)
+    Y = Point((maximum(line.box.Y[i] for line in fractal) for i in 1:D)...)
+    dX = Y - X
+    # Pick largest 
+    dx = maximum(dX)
+    # Smallest cuboid that contains it
+    Y = X + dx*ones(D)
+    
+    return Box(X, Y)
+end    
+
+"""
+Estimate the fractal dimension by succesively refining the bounding box
+and counting on each level of refinement the number of intersecting boxes
+"""
 struct BoxCounter{D}
+    # THe idea is to split the fractal into pieces
     fractal_pieces::Deque{Fractal{D}}
+    # Which might collide with the boxes on this level
     boxes::Deque{Vector{Box{D}}}
-    size::Float64
+    size::Float64  # size of the leaf box
 end
 
+"""BoxCounter for the fractal"""
 function BoxCounter{D}(fractal::Fractal{D})
     fractal_pieces = Deque{Fractal{D}}()
     boxes = Deque{Vector{Box{D}}}()
@@ -21,8 +41,14 @@ function BoxCounter{D}(fractal::Fractal{D})
     BoxCounter{D}(fractal_pieces, boxes, size)
 end
 
-start{D}(c::BoxCounter{D}, nlevels::Int) = (nlevels, (2*c.size, 0))
+# One box intersected. That box is bounding box
+start{D}(c::BoxCounter{D}, nlevels::Int) = (nlevels, (c.size, 1))
 
+"""
+The iterator state is the (level of refinment,
+                           (size of bbox on this level,
+                            count of intersected boxes))
+"""
 function next{D}(c::BoxCounter{D}, state)
     
     level, (size, count) = state
@@ -57,19 +83,9 @@ end
 
 done{D}(c::BoxCounter{D}, state) = first(state) < 0
 
-# Bounding box of fractal, (a hypercube)
-function Box{D}(fractal::Fractal{D})
-    X = Point((minimum(line.box.X[i] for line in fractal) for i in 1:D)...)
-    Y = Point((maximum(line.box.Y[i] for line in fractal) for i in 1:D)...)
-    dX = Y - X
-    # Pick largest 
-    dx = maximum(dX)
-    # Smallest cuboid that contains it
-    Y = X + dx*ones(D)
-    
-    return Box(X, Y)
-end    
+# -------------------------------------------------------------------
 
+# This is a non-iterator version of the above
 function fractal_dimension{D}(fractal::Fractal{D}, terminate::Function)
     fractal_pieces = Deque{Fractal{D}}()
     boxes = Deque{Vector{Box{D}}}()

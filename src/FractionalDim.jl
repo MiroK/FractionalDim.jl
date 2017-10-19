@@ -3,7 +3,7 @@ module FractionalDim
 using StaticArrays
 using DataStructures
 
-import Base: in, split, start, next, done, show
+import Base: in, split, start, next, done, show, ==
 
 export Point, Segment, Triangle, Box
 export bbox_collides, collides, surface
@@ -31,13 +31,17 @@ Box(X::Point{3}, Y::Point{3}) = Box{3}(X, Y)
 
 show{D}(io::IO, b::Box{D}) = print(io, "$(b.X)-$(b.Y)")
 
+=={D}(a::Box{D}, b::Box{D}) = norm(a.X-b.X) < EPS && norm(a.Y-b.Y) < EPS
+
+"""A segment connecting two point in R^d"""
 struct Segment{D}
-    O::Point{D}   # O + s * t is the segment; 0 <= s <= 1
+    # O + length * s * t is the segment; 0 <= s <= 1
+    O::Point{D}   
     B::Point{D}
     t::Point{D}
-    
+    # Handy for parametrization
     length
-    
+    # Bounxing box of the segment, for collisions
     box::Box{D}
 
     function Segment{D}(A::Point{D}, B::Point{D})
@@ -60,6 +64,9 @@ show{D}(io::IO, b::Segment{D}) = print(io, "$(b.O)-$(b.B)")
 # Eval the curve using (0, 1) parametrization
 (line::Segment)(s::Number) = line.O + s*line.length*line.t
 
+=={D}(a::Segment{D}, b::Segment{D}) = norm(a.O-b.O) < EPS && norm(a.B-b.B) < EPS
+
+# FIXME
 struct Triangle{D}
     O::Point{D}     # O + s1*t1 + s2*t2 is the triangle; 0 <= s1 + s2 <= 1
     t1::Point{D}

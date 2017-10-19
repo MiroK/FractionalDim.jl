@@ -1,4 +1,13 @@
-"""Quad tree like division"""
+"""
+Quad tree like division
+
+|---|---|
+| 2 | 4 |
+|---|---|
+| 1 | 3 |
+|---|---|
+
+"""
 function split(box::Box{2})
     X, Y = box.X, box.Y
     M = 0.5(X + Y)
@@ -8,7 +17,16 @@ function split(box::Box{2})
      Box(Point(M[1], M[2]), Point(Y[1], Y[2]))]
 end
 
-"""Four segments that are the boundary"""
+"""
+Four segments that are the boundary
+
+ |------|
+ |   2  |
+ | 1   3|
+ |   4  |
+ |------|
+
+"""
 function surface(box::Box{2})
     X, Y = box.X, box.Y
     [Segment(Point(X[1], X[2]), Point(X[1], Y[2])),
@@ -17,15 +35,17 @@ function surface(box::Box{2})
      Segment(Point(Y[1], X[2]), Point(X[1], X[2]))]
 end
 
-"""Do the 2 segments collide?"""
+"""Do 2 segments collide?"""
 function collides(s1::Segment{2}, s2::Segment{2})
-    # Discard
+    # Nope if bbox don't
     !(bbox_collides(s1.box, s2.box)) && return false
 
     c = dot(s1.t, s2.t)
     DO = s2.O - s1.O
     #  Possible coplanar
     if(abs(c - 1) < EPS || abs(c + 1) < EPS)
+        # Same line
+        norm(DO) < EPS && return true
         # If they lie on a same line then bbox colision implier collision
         return abs(dot(normalize(DO), s1.t) - 1) < EPS ||
                abs(dot(normalize(DO), s1.t) + 1) < EPS
@@ -38,7 +58,7 @@ function collides(s1::Segment{2}, s2::Segment{2})
     
     # We solve the 2x2 system
     α = (-dot(s1.t, DO) + c*dot(s2.t, DO))/(c^2-1)
-    # Point would not lie on the first line
+    # Point would not lie on the first line; [0, L] is in side
     !(-EPS < α < s1.length + EPS) && return false
     
     β = (-c*dot(s1.t, DO) + dot(s2.t, DO))/(c^2-1)
