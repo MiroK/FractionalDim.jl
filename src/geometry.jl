@@ -1,32 +1,3 @@
-# FIXME
-function Triangle(A::Point{2}, B::Point{2}, C::Point{2})
-    t1 = B - A
-    t2 = C - A
-    area = 0.5*norm(cross(t1, t2))
-    @assert area > EPS
-
-    normal = Point(0, 0, area)
-
-    X = Point((min(A[i], B[i], C[i]) for i in 1:2)...)
-    Y = Point((max(A[i], B[i], C[i]) for i in 1:2)...)
-
-    Triangle{2}(A, t1, t2, normal, area, Box(X, Y))
-end
-
-# FIXME
-function Triangle(A::Point{3}, B::Point{3}, C::Point{3})
-    t1 = B - A
-    t2 = C - A
-    normal = cross(t1, t2)
-    area = 0.5*norm(normal)
-    @assert area > EPS
-
-    X = Point((min(A[i], B[i], C[i]) for i in 1:3)...)
-    Y = Point((max(A[i], B[i], C[i]) for i in 1:3)...)
-
-    Triangle{3}(A, t1, t2, normal, area, Box(X, Y))
-end
-
 """
 Dimless collision between bounding boxes. NOTE: if they don't collide 
 then object don't.
@@ -36,8 +7,8 @@ function bbox_collides{D}(b::Box{D}, B::Box{D})
 end
 
 # Generate bbox collisions for other objects
-for typeb in (:Segment, :Triangle, :Box)
-    for typeB in (:Segment, :Triangle, :Box)
+for typeb in (:Segment, :Box)
+    for typeB in (:Segment, :Box)
         if !(typeb == :Box && typeB == :Box)
 
             @eval begin

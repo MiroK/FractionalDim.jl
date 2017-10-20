@@ -66,22 +66,9 @@ show{D}(io::IO, b::Segment{D}) = print(io, "$(b.O)-$(b.B)")
 
 =={D}(a::Segment{D}, b::Segment{D}) = norm(a.O-b.O) < EPS && norm(a.B-b.B) < EPS
 
-# FIXME
-struct Triangle{D}
-    O::Point{D}     # O + s1*t1 + s2*t2 is the triangle; 0 <= s1 + s2 <= 1
-    t1::Point{D}
-    t2::Point{D}
-    normal::Point{3}
-
-    area
-    
-    box::Box{D}
-end
-
 #######################
 # Geometry & collisions
 #######################
-# 
 include("geometry.jl")
 
 # Collisions in gdim = 2

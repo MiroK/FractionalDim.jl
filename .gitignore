@@ -3,3 +3,6 @@
 *.jl.mem
 
 *~
+
+# FEM meshes
+*.xml
