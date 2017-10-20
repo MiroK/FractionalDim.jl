@@ -11,10 +11,10 @@ function unit_circle(npoints::Int)::Fractal{2}
 end
 
 
-"""Step a segment into
-   /\
---/  \--
-"""
+#"""Step a segment into
+#   /\
+#--/  \--
+#"""
 function koch_line(line::Segment{2})::Fractal{2}
     p0, p1, p2, p3 = line.O, line(1./3), line(2./3), line.B
 
@@ -63,9 +63,9 @@ end
 
 # --------------------------------------------------------------------
 
-"""                  |-|
---------  becomes   -| |-
-"""
+#"""                  |-|
+#--------  becomes   -| |-
+#"""
 function koch_quadratic_1(line::Segment{2})
     v1, v2, v3, v4 = line.O, line(1./3), line(2./3), line.B
     shift = Point(-line.t[2], line.t[1])*line.length/3
@@ -90,10 +90,10 @@ end
 
 # --------------------------------------------------------------------
 
-"""                  |-|
---------  becomes   -| | |-
-                       |-|
-"""
+#"""                  |-|
+#--------  becomes   -| | |-
+#                       |-|
+#"""
 function koch_quadratic_2(line::Segment{2})
     v1, v2, v3, v4, v5 = line.O, line(0.25), line(0.5), line(0.75), line.B
     shift = Point(-line.t[2], line.t[1])*line.length/4
@@ -121,10 +121,10 @@ end
 
 # --------------------------------------------------------------------
 
-"""               _
-\  / becomes   | |
- \/            |_|
-"""
+#"""               _
+#\  / becomes   | |
+# \/            |_|
+#"""
 function dragon_curve(lines::NTuple{2, Segment{2}})
     line = first(lines)
     v1, v2 = line.O, line.B
