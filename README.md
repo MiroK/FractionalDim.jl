@@ -9,7 +9,7 @@ of this effort is box counting for collection of segments. Animation below shows
 for an approximation to the Koch curve.
 
 <p align="center">
-  <img src="https://github.com/MiroK/FracionalDim.jl/blob/master/apps/koch.gif">
+  <img src="https://github.com/MiroK/FractionalDim.jl/blob/master/apps/koch.gif">
 </p>
 
 
