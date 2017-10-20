@@ -30,10 +30,17 @@ struct BoxCounter{D}
     # Which might collide with the boxes on this level
     boxes::Deque{Vector{Box{D}}}
     size::Float64  # size of the leaf box
+    icount::Int    # segment count of fractal, just for printing
+end
+
+show{D}(io::IO, c::BoxCounter{D}) = begin
+    print(io, "BoxCounter for curve with $(c.icount) pieces.")
 end
 
 """BoxCounter for the fractal"""
 function BoxCounter{D}(fractal::Fractal{D})
+    icount = length(fractal)
+    
     fractal_pieces = Deque{Fractal{D}}()
     boxes = Deque{Vector{Box{D}}}()
     # At the beginning there is one bounding box of fracal and
@@ -45,7 +52,7 @@ function BoxCounter{D}(fractal::Fractal{D})
 
     size = first(box.Y - box.X)
 
-    BoxCounter{D}(fractal_pieces, boxes, size)
+    BoxCounter{D}(fractal_pieces, boxes, size, icount)
 end
 
 # One box intersected. That box is bounding box
