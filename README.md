@@ -1,6 +1,5 @@
 # FractionalDim
-
-[![Build Status](https://travis-ci.org/Mirok/FractionalDim.jl.svg?branch=master)](https://travis-ci.org/Mirok/FractionalDim.jl)
+[![Build Status](https://travis-ci.org/MiroK/FractionalDim.jl.svg?branch=master)](https://travis-ci.org/MiroK/FractionalDim.jl)
 
 This package implements a [box counting](http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0041148) algorithm
 for computing approximate fractional dimension of curves. The main objective is to compute
