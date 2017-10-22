@@ -106,11 +106,7 @@ end
 function collides(segment::Segment{3}, box::Box{3})
     !bbox_collides(segment.box, box) && return false
 
-    is_A_in = segment.O ∈ box
-    is_B_in = segment.B ∈ box
-
-    # At least on is inside
-    (is_A_in || is_B_in) && return true
+    (segment.O ∈ box && segment.O ∈ box) && return true
 
     # Check collisions with cases --[---]--
     for line in surface(box)

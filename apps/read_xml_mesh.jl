@@ -2,7 +2,7 @@ using FractionalDim
 using LightXML
 
 
-function read_xml_mesh(mesh::AbstractString)::Vector{Segment}
+function read_xml_mesh(mesh::AbstractString)::Vector{Segment{3}}
     xroot = root(parse_file(mesh))
     mesh = first(child_elements(xroot))
     @assert attribute(mesh, "celltype") == "interval"
@@ -44,15 +44,15 @@ function read_xml_mesh(mesh::AbstractString)::Vector{Segment}
 end
 
 # Read
-maybe_fractal = read_mesh_xml("vasc_mesh.xml");
+maybe_fractal = read_xml_mesh("vasc_mesh.xml");
 
 # And now estimate the dimension
 counter = BoxCounter(maybe_fractal)
-sizes, counts = [], []
+sizes, counts = Vector{Float64}(), Vector{Int}()
     
-state = start(counter, 5)
+state = start(counter, 16)
 
-rate = Inf
+rate, rate_lsq = Inf, Inf
 while !done(counter, state)
     state = next(counter, state)
     size, count = last(state)
@@ -62,7 +62,9 @@ while !done(counter, state)
     if length(sizes) > 1
         rate = -log(counts[end]/counts[end-1])/log(sizes[end]/sizes[end-1])
     end
-    println((size, count, rate))       
+    
+    println((size, count, rate))
+    writedlm("vasc_mesh_FD.txt", [sizes counts])
 end
 
-writedlm("vasc_mesh_FD.txt", [sizes counts])
+
