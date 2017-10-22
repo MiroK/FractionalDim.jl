@@ -76,40 +76,36 @@ end
 
 """Does a face(rectangle) collide with segment"""
 function collides(line::Segment{3}, box::Rectangle)
-    # Nope if bbox don't
-    !(bbox_collides(s1.box, s2.box)) && return false
-
-    c = dot(s1.t, s2.t)
-     DO = s2.O - s1.O
-#     #  Possible coplanar
-#     if(abs(c - 1) < EPS || abs(c + 1) < EPS)
-#         # Same line
-#         norm(DO) < EPS && return true
-#         # If they lie on a same line then bbox colision implier collision
-#         return abs(dot(normalize(DO), s1.t) - 1) < EPS ||
-#                abs(dot(normalize(DO), s1.t) + 1) < EPS
-#     end
-
-#     #A = [1 -c; c -1]
-#     #b = [dot(DO, s1.t), dot(DO, s2.t)]
-#     #x = A\b
-#     #println((x, s1(x[1]), s2(x[2])))
+    D = line.O - box.O
+    D1 = dot(D, box.t1)
+    D2 = dot(D, box.t2)
+    D3 = dot(D, line.t)
     
-#     # We solve the 2x2 system
-#     α = (-dot(s1.t, DO) + c*dot(s2.t, DO))/(c^2-1)
-#     # Point would not lie on the first line; [0, L] is in side
-#     !(-EPS < α < s1.length + EPS) && return false
-    
-#     β = (-c*dot(s1.t, DO) + dot(s2.t, DO))/(c^2-1)
-#     !(-EPS < β < s2.length + EPS) && return false
+    c1 = dot(box.t1, line.t)
+    c2 = dot(box.t2, line.t)
+    C = c1^2 + c2^2 - 1
 
-#     #@show (α, β)
-    
-#     true
+    # @show [1 0 -c1; 0 1 -c2; c1 c2 -1]\[D1, D2, D3]
+    # We solve the 3x3 system
+    α = (-c1*c1/C + 1)*D1 + (-c1*c2/C)*D2 + (c1/C)*D3
+    # @show α
+    !(-EPS < α < box.l1 + EPS) && return false
+
+    β = (-c1*c2/C)*D1 + (-c2*c2/C + 1)*D2 + (c2/C)*D3
+    # @show β
+    !(-EPS < β < box.l2 + EPS) && return false
+
+    γ = (-c1/C)*D1 + (-c2/C)*D2 + (1/C)*D3
+    # @show γ
+    !(-EPS < γ < line.length + EPS) && return false
+
+    true
 end
 
 """See if segment collides with a box"""
 function collides(segment::Segment{3}, box::Box{3})
+    !bbox_collides(segment.box, box) && return false
+
     is_A_in = segment.O ∈ box
     is_B_in = segment.B ∈ box
 

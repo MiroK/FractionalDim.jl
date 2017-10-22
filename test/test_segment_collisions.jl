@@ -79,7 +79,7 @@ end
 end
 
 # -------------------------------------------------------------------
-# Both in
+# # Both in
 @test begin
     b = Box(Point(0, 0, 0), Point(1, 1, 1))
     l = Segment(Point(0.25, 0.25, 0.25), Point(0.75, 0.75, 0.75))
@@ -93,30 +93,59 @@ end
     collides(l, b)
 end
 
-# # Both out but cross
-# @test begin
-#     b = Box(Point(0, 0, 0), Point(1, 1, 1))
-#     l = Segment(Point(0.5, 0.5, -1), Point(0.5, 0.5, 3))
-#     collides(l, b)
-# end
+# Both out but cross
+@test begin
+    b = Box(Point(0, 0, 0), Point(1, 1, 1))
+    l = Segment(Point(0.5, 0.5, -1), Point(0.5, 0.5, 3))
+    collides(l, b)
+end
 
-# # Point collision
-# @test begin
-#     b = Box(Point(0, 0, 0), Point(1, 1, 1))
-#     l = Segment(Point(1, 1, 1), Point(3, 3, 3))
-#     collides(l, b)
-# end
+# Both out but cross
+@test begin
+    b = Box(Point(0, 0, 0), Point(1, 1, 1))
+    l = Segment(Point(0.25, 0.25, -1), Point(0.75, 0.75, 3))
+    collides(l, b)
+end
 
-# # Entire segment collision
-# @test begin
-#     b = Box(Point(0, 0, 0), Point(1, 1, 1))
-#     l = Segment(Point(0, 0, 0), Point(1, 0, 0))
-#     collides(l, b)
-# end
+# Both out but cross
+@test begin
+    b = Box(Point(0, 0, 0), Point(1, 1, 1))
+    l = Segment(Point(0.123, 0.1, -1), Point(0.567, 0.456, 3))
+    collides(l, b)
+end
 
-# # Both out
-# @test begin
-#     b = Box(Point(0, 0, 0), Point(1, 1, 1))
-#     l = Segment(Point(2, 2, 2), Point(3, 3, 3))
-#     !collides(l, b)
-# end
+# Point collision
+@test begin
+    b = Box(Point(0, 0, 0), Point(1, 1, 1))
+    l = Segment(Point(1, 1, 1), Point(3, 3, 3))
+    collides(l, b)
+end
+
+# Both out
+@test begin
+    b = Box(Point(0, 0, 0), Point(1, 1, 1))
+    l = Segment(Point(2, 2, 2), Point(3, 3, 3))
+    !collides(l, b)
+end
+
+# Both out
+@test begin
+    b = Box(Point(0, 0, 0), Point(1, 1, 1))
+    l = Segment(Point(0.5, 0.5, 0), Point(0.5, 0.5, -2))
+    collides(l, b)
+end
+
+# Entire segment collision
+@test begin
+    b = Box(Point(0, 0, 0), Point(1, 1, 1))
+    l = Segment(Point(0, 0, 0), Point(1, 0, 0))
+    collides(l, b)
+end
+
+# Intersect in plane
+@test begin
+    b = Box(Point(0, 0, 0), Point(1, 1, 1))
+    l = Segment(Point(0, 0, 0), Point(1, 1, 0))
+    collides(l, b)
+end
+
